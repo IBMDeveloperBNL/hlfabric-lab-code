@@ -19,12 +19,13 @@ const ccp = JSON.parse(ccpJSON);
 // A wallet stores a collection of identities for use
 const wallet = new FileSystemWallet('./local_fabric/wallet');
 
+// Gateway to interact with the blockchain network
+const gateway = new Gateway();
+
 export module BlockChainModule {
 
   export class BlockchainClient {
     async connectToNetwork() {
-
-      const gateway = new Gateway();
 
       try {
         await gateway.connect(ccp, { wallet, identity: appAdmin, discovery: gatewayDiscovery });
@@ -50,6 +51,12 @@ export module BlockChainModule {
 
         return error;
       }
+    }
+
+    async disconnectFromNetwork() {
+      // Properly disconnecting from the network when finished
+      let response = await gateway.disconnect();
+      return response;
     }
 
     async createProjectPledge(args: any) {
