@@ -49,4 +49,10 @@ export class ProjectPledge {
      */
     @Property()
     funds?: Funding;
+
+    @Property()
+    field1?: string;
+
+    @Property()
+    field2?: string;
 }

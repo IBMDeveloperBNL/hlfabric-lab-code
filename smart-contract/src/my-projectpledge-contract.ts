@@ -64,10 +64,11 @@ export class MyProjectPledgeContract extends Contract {
             throw new Error(`The project pledge ${pledgeId} does not exists`);
         }
 
-        const buffer = await ctx.stub.getState(pledgeId);
+        let buffer = await ctx.stub.getState(pledgeId);
         const pledge = JSON.parse(buffer.toString()) as ProjectPledge;
+
         return pledge;
-    }
+    }    
 
     @Transaction()
     async sendPledgeToGlobalCitizen(ctx: Context, pledgeId: string): Promise<void> {
