@@ -10,7 +10,6 @@ let appAdmin = config.appAdmin;
 let gatewayDiscovery = config.gatewayDiscovery;
 let connection_file = config.connection_file;
 
-
 // connect to the connection file
 const ccpPath = path.join(process.cwd(), './local_fabric/' + connection_file);
 const ccpJSON = fs.readFileSync(ccpPath, 'utf8');
