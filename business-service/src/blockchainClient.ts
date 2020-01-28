@@ -38,6 +38,37 @@ export module BlockChainModule {
         // Get the contract we have installed on the peer
         const contract = await network.getContract('global-citizen');
 
+        await contract.addContractListener('my-contract-listener', 'PledgeEvent', (err:any, event:any, blockNumber:any, transactionId:any, status:any) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+    
+          // Convert event to something we can parse 
+          event = event.payload.toString();
+          event = JSON.parse(event);
+    
+          // Output the PledgeEvent
+          console.log('***************************************************************** Start Pledge Event *****************************************************************');
+          console.log(`type: ${event.type}`);
+          console.log(`pledgeId: ${event.pledgeId}`);
+          console.log(`name: ${event.name}`);
+          console.log(`description: ${event.description}`);
+          console.log(`fundsRequired: ${event.fundsRequired}`);
+          
+          if (event.funds) {
+            console.log(`   fundingType: ${event.funds.fundingType}`);
+            console.log(`   approvedFunding: ${event.funds.approvedFunding}`);
+            console.log(`   totalFundsReceived: ${event.funds.totalFundsReceived}`);
+            console.log(`   fundsPerInstallment: ${event.funds.fundsPerInstallment}`);
+          }
+          
+          console.log(`status: ${event.status}`); 
+          console.log(``);
+          console.log(`Block Number: ${blockNumber} Transaction ID: ${transactionId} Status: ${status}`);
+          console.log('***************************************************************** End Pledge Event *******************************************************************');
+        });
+
         let networkObj = {
           contract: contract,
           network: network

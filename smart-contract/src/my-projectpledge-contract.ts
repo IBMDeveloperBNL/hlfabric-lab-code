@@ -54,6 +54,18 @@ export class MyProjectPledgeContract extends Contract {
 
         const buffer = Buffer.from(JSON.stringify(pledge));
         await ctx.stub.putState(pledgeId, buffer);
+
+        // define and set pledgeEvent
+        let pledgeEvent = {
+            type: "Create ProjectPledge",
+            pledgeId: pledgeId,
+            name: pledge.name,
+            description: pledge.description,
+            fundsRequired: pledge.fundsRequired,
+            status: pledge.status,
+        };
+
+        await ctx.stub.setEvent('PledgeEvent', Buffer.from(JSON.stringify(pledgeEvent)));        
     }
 
     @Transaction(false)
@@ -84,12 +96,23 @@ export class MyProjectPledgeContract extends Contract {
 
                 const buffer = Buffer.from(JSON.stringify(pledge));
                 ctx.stub.putState(pledgeId, buffer);
+
+                // define and set pledgeEvent
+                let pledgeEvent = {
+                    type: "Send ProjectPledge to Global Citizen",
+                    pledgeId: pledgeId,
+                    name: pledge.name,
+                    description: pledge.description,
+                    fundsRequired: pledge.fundsRequired,
+                    status: pledge.status,
+                };
+                
+                ctx.stub.setEvent('PledgeEvent', Buffer.from(JSON.stringify(pledgeEvent)));        
+
             } else {
                 throw new Error('The project pledge cannot move to GLOBALCITIZENREVIEW state. Check current owner and state.');
             }
         });
-
-        console.log(`Updated project pledge ${pledgeId} to state GLOBALCITIZENREVIEW`);
     }
 
     @Transaction()
@@ -106,12 +129,23 @@ export class MyProjectPledgeContract extends Contract {
 
                 const buffer = Buffer.from(JSON.stringify(pledge));
                 ctx.stub.putState(pledgeId, buffer);
+
+                // define and set pledgeEvent
+                let pledgeEvent = {
+                    type: "Send ProjectPledge to Government Org",
+                    pledgeId: pledgeId,
+                    name: pledge.name,
+                    description: pledge.description,
+                    fundsRequired: pledge.fundsRequired,
+                    status: pledge.status,
+                };
+                
+                ctx.stub.setEvent('PledgeEvent', Buffer.from(JSON.stringify(pledgeEvent)));        
+
             } else {
                 throw new Error('The project pledge cannot move to GOVORGREVIEW state. Check current owner and state.');
             }
         });
-
-        console.log(`Updated project pledge ${pledgeId} to state GOVORGREVIEW`);
     }
 
     @Transaction()
@@ -156,12 +190,23 @@ export class MyProjectPledgeContract extends Contract {
 
                 const buffer = Buffer.from(JSON.stringify(pledge));
                 ctx.stub.putState(pledgeId, buffer);
+
+                // define and set pledgeEvent
+                let pledgeEvent = {
+                    type: "Update ProjectPledge",
+                    pledgeId: pledgeId,
+                    name: pledge.name,
+                    description: pledge.description,
+                    fundsRequired: pledge.fundsRequired,
+                    funds: pledge.funds,
+                    status: pledge.status,
+                };
+                
+                ctx.stub.setEvent('PledgeEvent', Buffer.from(JSON.stringify(pledgeEvent)));        
             } else {
                 throw new Error('The project pledge cannot move to PROPOSALFUNDED state. Check current owner and state.');
             }
         });
-
-        console.log(`Updated project pledge ${pledgeId} with approved funding details and set state to PROPOSALFUNDED`);
     }
 
     @Transaction()
@@ -170,20 +215,31 @@ export class MyProjectPledgeContract extends Contract {
         const orgMSPID = ctx.clientIdentity.getMSPID();
 
         //Obtain project pledge from the worldstate
-        await this.readProjectPledge(ctx, pledgeId)
-            .then(pledge => {
-                console.log(`Resolved project pledge ${pledgeId} from world state. Ready to transfer funds`);
+        await this.readProjectPledge(ctx, pledgeId).then(pledge => {
+            console.log(`Resolved project pledge ${pledgeId} from world state. Ready to transfer funds`);
 
-                if ((pledge.status === ppState.PROPOSALFUNDED) && (orgMSPID === GOVORG)) {
-                    pledge.funds.totalFundsReceived += pledge.funds.fundsPerInstallment;
+            if ((pledge.status === ppState.PROPOSALFUNDED) && (orgMSPID === GOVORG)) {
+                pledge.funds.totalFundsReceived += pledge.funds.fundsPerInstallment;
 
-                    const buffer = Buffer.from(JSON.stringify(pledge));
-                    ctx.stub.putState(pledgeId, buffer);
-                } else {
-                    throw new Error('Unable to increment totals funds received.');
-                }
-            });
+                const buffer = Buffer.from(JSON.stringify(pledge));
+                ctx.stub.putState(pledgeId, buffer);
 
-        console.log(`Incremented total funds received for project pledge ${pledgeId}`);
+                // define and set pledgeEvent
+                let pledgeEvent = {
+                    type: "Transfer Funds to ProjectPledge",
+                    pledgeId: pledgeId,
+                    name: pledge.name,
+                    description: pledge.description,
+                    fundsRequired: pledge.fundsRequired,
+                    funds: pledge.funds,
+                    status: pledge.status,
+                };
+                
+                ctx.stub.setEvent('PledgeEvent', Buffer.from(JSON.stringify(pledgeEvent)));        
+
+            } else {
+                throw new Error('Unable to increment totals funds received.');
+            }
+        });
     }
 }
