@@ -46,6 +46,8 @@ export class ProjectPledgeController {
 
     } catch (error) {
       return error;
+    } finally {
+      blockchainClient.disconnectFromNetwork();
     }
   }
 }

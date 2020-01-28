@@ -56,9 +56,9 @@ export class UpdatePledgeController {
     } catch (error) {
       let responseMessage: ResponseMessage = new ResponseMessage({ message: error.message, statusCode: '400' });
       return responseMessage;
+    } finally {
+      await blockchainClient.disconnectFromNetwork();
     }
-
   }
-
 }
 
