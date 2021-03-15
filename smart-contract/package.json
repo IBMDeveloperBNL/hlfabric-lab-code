@@ -21,8 +21,8 @@
     "author": "John Doe",
     "license": "Apache-2.0",
     "dependencies": {
-        "fabric-contract-api": "2.2.0",
-        "fabric-shim": "2.2.0"
+        "fabric-contract-api": "^2.2.0",
+        "fabric-shim": "^2.2.0"
     },
     "devDependencies": {
         "@types/chai": "^4.2.11",
@@ -41,7 +41,7 @@
         "tslint": "^6.1.0",
         "typescript": "^3.8.3",
         "winston": "^3.2.1"
-    },    
+    },
     "nyc": {
         "extension": [
             ".ts",

@@ -29,21 +29,21 @@ export class MyProjectPledgeContract extends Contract {
     @Transaction(false)
     @Returns('boolean')
     public async projectPledgeExists(ctx: Context, pledgeId: string): Promise<boolean> {
-        const buffer = await ctx.stub.getState(pledgeId);
-        return (!!buffer && buffer.length > 0);
+        const data: Uint8Array = await ctx.stub.getState(pledgeId);
+        return (!!data && data.length > 0);
     }
 
     @Transaction()
     async createProjectPledge(ctx: Context, aidOrg: string, pledgeNumber: string, name: string, description: string, fundsRequired: number): Promise<void> {
-        const pledgeId = aidOrg + ':' + pledgeNumber;
-        const exists = await this.projectPledgeExists(ctx, pledgeId);
+        const pledgeId: string = aidOrg + ':' + pledgeNumber;
+        const exists: boolean = await this.projectPledgeExists(ctx, pledgeId);
 
         if (exists) {
             throw new Error(`The project pledge ${pledgeId} already exists`);
         }
 
         // create an instance of the project pledge
-        let pledge = new ProjectPledge();
+        let pledge: ProjectPledge = new ProjectPledge();
 
         pledge.pledgeNumber = pledgeNumber;
         pledge.aidOrg = aidOrg;
@@ -52,7 +52,7 @@ export class MyProjectPledgeContract extends Contract {
         pledge.fundsRequired = fundsRequired;
         pledge.status = ppState.INITIALSTATE;
 
-        const buffer = Buffer.from(JSON.stringify(pledge));
+        const buffer: Buffer = Buffer.from(JSON.stringify(pledge));
         await ctx.stub.putState(pledgeId, buffer);
 
         // define and set pledgeEvent
@@ -71,13 +71,13 @@ export class MyProjectPledgeContract extends Contract {
     @Transaction(false)
     @Returns('ProjectPledge')
     public async readProjectPledge(ctx: Context, pledgeId: string): Promise<ProjectPledge> {
-        const exists = await this.projectPledgeExists(ctx, pledgeId);
+        const exists: boolean = await this.projectPledgeExists(ctx, pledgeId);
         if (!exists) {
             throw new Error(`The project pledge ${pledgeId} does not exists`);
         }
 
-        let buffer = await ctx.stub.getState(pledgeId);
-        const pledge = JSON.parse(buffer.toString()) as ProjectPledge;
+        let data: Uint8Array = await ctx.stub.getState(pledgeId);
+        const pledge: ProjectPledge = JSON.parse(data.toString()) as ProjectPledge;
 
         return pledge;
     }    
@@ -85,7 +85,7 @@ export class MyProjectPledgeContract extends Contract {
     @Transaction()
     async sendPledgeToGlobalCitizen(ctx: Context, pledgeId: string): Promise<void> {
         // obtaining the MSP ID from the caller identity to determine which participant the user belongs to
-        const orgMSPID = ctx.clientIdentity.getMSPID();
+        const orgMSPID: string = ctx.clientIdentity.getMSPID();
 
         //Obtain project pledge from the worldstate
         await this.readProjectPledge(ctx, pledgeId).then(pledge => {
@@ -118,7 +118,7 @@ export class MyProjectPledgeContract extends Contract {
     @Transaction()
     async sendPledgeToGovOrg(ctx: Context, pledgeId: string): Promise<void> {
         // obtaining the MSP ID from the caller identity to determine which participant the user belongs to
-        const orgMSPID = ctx.clientIdentity.getMSPID();
+        const orgMSPID: string = ctx.clientIdentity.getMSPID();
 
         //Obtain project pledge from the worldstate
         await this.readProjectPledge(ctx, pledgeId).then(pledge => {
@@ -151,7 +151,7 @@ export class MyProjectPledgeContract extends Contract {
     @Transaction()
     async updatePledge(ctx: Context, pledgeId: string, fundingType: 'WEEKLY' | 'MONTHLY' | 'SEMIANNUALY' | 'ANNUALY', approvedFunding: number, fundsPerInstallment: number): Promise<void> {
         // obtaining the MSP ID from the caller identity to determine which participant the user belongs to
-        const orgMSPID = ctx.clientIdentity.getMSPID();
+        const orgMSPID: string = ctx.clientIdentity.getMSPID();
 
         //Obtain project pledge from the worldstate
         await this.readProjectPledge(ctx, pledgeId).then(pledge => {
@@ -160,7 +160,7 @@ export class MyProjectPledgeContract extends Contract {
             if ((pledge.status === ppState.GOVORGREVIEW) && (orgMSPID === GOVORG)) {
                 // Updating project pledge with funding details
                 let daysToAdd = 0;
-                let fund = new Funding();
+                let fund: Funding = new Funding();
 
                 switch (fundingType) {
                     case 'WEEKLY':
@@ -212,7 +212,7 @@ export class MyProjectPledgeContract extends Contract {
     @Transaction()
     async transferFunds(ctx: Context, pledgeId: string): Promise<void> {
         // obtaining the MSP ID from the caller identity to determine which participant the user belongs to
-        const orgMSPID = ctx.clientIdentity.getMSPID();
+        const orgMSPID: string = ctx.clientIdentity.getMSPID();
 
         //Obtain project pledge from the worldstate
         await this.readProjectPledge(ctx, pledgeId).then(pledge => {
