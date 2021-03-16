@@ -1,52 +1,260 @@
-/* tslint:disable:no-any */
-import { operation, param, requestBody } from '@loopback/rest';
-import { ProjectPledge } from '../models/project-pledge.model';
-import { BlockChainModule } from '../blockchainClient';
+import {api, operation, param} from '@loopback/rest';
+import {BlockChainModule} from '../blockchainClient';
+import {ProjectPledge} from '../models/project-pledge.model';
 
 let blockchainClient = new BlockChainModule.BlockchainClient();
+
 /**
  * The controller class is generated from OpenAPI spec with operations tagged
- * by ProjectPledge
- * An asset named ProjectPledge
+ * by ProjectPledgeController.
+ *
  */
+@api({
+  components: {
+    schemas: {
+      ResponseMessage: {
+        title: 'ResponseMessage',
+        properties: {
+          message: {
+            type: 'string',
+          },
+          statusCode: {
+            type: 'string',
+          },
+        },
+        required: [
+          'message',
+          'statusCode',
+        ],
+      },
+      CreateProjectPledge: {
+        title: 'CreateProjectPledge',
+        properties: {
+          aidOrg: {
+            type: 'string',
+          },
+          pledgeNumber: {
+            type: 'string',
+          },
+          name: {
+            type: 'string',
+          },
+          description: {
+            type: 'string',
+          },
+          fundsRequired: {
+            type: 'string',
+          },
+        },
+        required: [
+          'aidOrg',
+          'pledgeNumber',
+          'name',
+          'description',
+          'fundsRequired',
+        ],
+      },
+      Funding: {
+        title: 'Funding',
+        properties: {
+          fundingType: {
+            type: 'string',
+          },
+          nextFundingDueInDays: {
+            type: 'number',
+          },
+          approvedFunding: {
+            type: 'number',
+          },
+          totalFundsReceived: {
+            type: 'number',
+          },
+          fundsPerInstallment: {
+            type: 'number',
+          },
+          govOrgId: {
+            type: 'string',
+          },
+        },
+        required: [
+          'fundingType',
+          'nextFundingDueInDays',
+          'approvedFunding',
+          'totalFundsReceived',
+          'fundsPerInstallment',
+          'govOrgId',
+        ],
+      },
+      ProjectPledge: {
+        title: 'ProjectPledge',
+        properties: {
+          pledgeId: {
+            type: 'string',
+          },
+          name: {
+            type: 'string',
+          },
+          decription: {
+            type: 'string',
+          },
+          fundsRequired: {
+            type: 'number',
+          },
+          status: {
+            type: 'string',
+          },
+          aidOrg: {
+            type: 'string',
+          },
+          funds: {
+            type: 'array',
+            items: {
+              $ref: '#/components/schemas/Funding',
+            },
+          },
+        },
+        required: [
+          'pledgeId',
+          'name',
+          'decription',
+          'fundsRequired',
+          'status',
+          'aidOrg',
+        ],
+      },
+      SendPledgeToGlobalCitizen: {
+        title: 'SendPledgeToGlobalCitizen',
+        properties: {
+          pledgeId: {
+            type: 'string',
+          },
+        },
+        required: [
+          'pledgeId',
+        ],
+      },
+      SendPledgeToGovOrg: {
+        title: 'SendPledgeToGovOrg',
+        properties: {
+          pledgeId: {
+            type: 'string',
+          },
+        },
+        required: [
+          'pledgeId',
+        ],
+      },
+      TransferFunds: {
+        title: 'TransferFunds',
+        properties: {
+          pledgeId: {
+            type: 'string',
+          },
+        },
+        required: [
+          'pledgeId',
+        ],
+      },
+      UpdatePledge: {
+        title: 'UpdatePledge',
+        properties: {
+          pledgeId: {
+            type: 'string',
+          },
+          fundingType: {
+            type: 'string',
+          },
+          approvedFunding: {
+            type: 'string',
+          },
+          fundsPerInstallment: {
+            type: 'string',
+          },
+        },
+        required: [
+          'pledgeId',
+          'fundingType',
+          'approvedFunding',
+          'fundsPerInstallment',
+        ],
+      },
+    },
+  },
+  paths: {},
+})
 export class ProjectPledgeController {
-  constructor() { }
+  constructor() {}
 
   /**
    *
-
-   * @param id Model id
-   * @returns Request was successful
+   *
+   * @param id
+   * @returns ProjectPledge model instance
    */
-
   @operation('get', '/ProjectPledge/{id}', {
+    'x-controller-name': 'ProjectPledgeController',
+    'x-operation-name': 'projectPledgeFindById',
+    tags: [
+      'ProjectPledgeController',
+    ],
     responses: {
       '200': {
         description: 'ProjectPledge model instance',
-        content: { 'application/json': { schema: { 'x-ts-type': ProjectPledge } } }
-      }
-    }
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/ProjectPledge',
+            },
+          },
+        },
+      },
+    },
+    parameters: [
+      {
+        name: 'id',
+        in: 'path',
+        schema: {
+          type: 'string',
+        },
+        required: true,
+      },
+    ],
+    operationId: 'ProjectPledgeController.projectPledgeFindById',
   })
-  async projectPledgeFindById(@param({ name: 'id', in: 'path' }) id: string): Promise<ProjectPledge> {
+  async projectPledgeFindById(@param({
+    name: 'id',
+    in: 'path',
+    schema: {
+      type: 'string',
+    },
+    required: true,
+  }) id: string): Promise<ProjectPledge> {
     try {
       let networkObj = await blockchainClient.connectToNetwork();
 
       if (networkObj && !(networkObj.stack)) {
+        // Construc the input object with right function to call, the necessary
+        // parameters and the created contract from the blockchainClient class
         let inputObj = {
           function: 'readProjectPledge',
           contract: networkObj.contract,
           id: id
         };
 
-        return await blockchainClient.queryProject(inputObj);
+        const response: any = await blockchainClient.queryProject(inputObj);
+        return response;
       } else {
         // Couldn't connect to network, so passing this object on to catch clause...
         throw new Error(networkObj.message);
       }
-
     } catch (error) {
       return error;
     } finally {
+      // Workaround for error @grpc/grpc-js: Closing Stream After Unary Call Triggers Double Free
+      // For more info: https://github.com/grpc/grpc-node/issues/1464
+      await new Promise(resolve => setTimeout(resolve, 0));
+
+      // Properly disconnecting from the network
       blockchainClient.disconnectFromNetwork();
     }
   }

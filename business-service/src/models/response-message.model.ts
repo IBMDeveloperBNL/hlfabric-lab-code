@@ -1,17 +1,39 @@
-import { model, property } from '@loopback/repository';
+import {model, property} from '@loopback/repository';
 
-@model({ name: 'ResponseMessage' })
+/**
+ * The model class is generated from OpenAPI schema - ResponseMessage
+ * ResponseMessage
+ */
+@model({name: 'ResponseMessage'})
 export class ResponseMessage {
-
   constructor(data?: Partial<ResponseMessage>) {
     if (data != null && typeof data === 'object') {
       Object.assign(this, data);
     }
   }
 
-  @property({ name: 'message', required: true })
-  message: string = 'OK';
+  /**
+   *
+   */
+  @property({required: true, jsonSchema: {
+  type: 'string',
+}})
+  message: string;
 
-  @property({ name: 'statusCode', required: true })
-  statusCode: string = '200';
+  /**
+   *
+   */
+  @property({required: true, jsonSchema: {
+  type: 'string',
+}})
+  statusCode: string;
+
 }
+
+export interface ResponseMessageRelations {
+  // describe navigational properties here
+}
+
+export type ResponseMessageWithRelations = ResponseMessage & ResponseMessageRelations;
+
+

@@ -1,11 +1,10 @@
-/* tslint:disable:no-any */
-import { model, property } from '@loopback/repository';
+import {model, property} from '@loopback/repository';
 
 /**
  * The model class is generated from OpenAPI schema - Funding
- * A concept named Funding
+ * Funding
  */
-@model({ name: 'Funding' })
+@model({name: 'Funding'})
 export class Funding {
   constructor(data?: Partial<Funding>) {
     if (data != null && typeof data === 'object') {
@@ -16,37 +15,57 @@ export class Funding {
   /**
    *
    */
-  @property({ required: true })
-  fundingType: 'WEEKLY' | 'MONTHLY' | 'SEMIANNUALY' | 'ANNUALY';
+  @property({required: true, jsonSchema: {
+  type: 'string',
+}})
+  fundingType: string;
 
   /**
    *
    */
-  @property({ required: true })
+  @property({required: true, jsonSchema: {
+  type: 'number',
+}})
   nextFundingDueInDays: number;
 
   /**
    *
    */
-  @property({ required: true })
+  @property({required: true, jsonSchema: {
+  type: 'number',
+}})
   approvedFunding: number;
 
   /**
    *
    */
-  @property({ required: true })
+  @property({required: true, jsonSchema: {
+  type: 'number',
+}})
   totalFundsReceived: number;
 
   /**
    *
    */
-  @property({ required: true })
+  @property({required: true, jsonSchema: {
+  type: 'number',
+}})
   fundsPerInstallment: number;
 
   /**
    *
    */
-  @property({ required: true })
+  @property({required: true, jsonSchema: {
+  type: 'string',
+}})
   govOrgId: string;
+
 }
+
+export interface FundingRelations {
+  // describe navigational properties here
+}
+
+export type FundingWithRelations = Funding & FundingRelations;
+
 

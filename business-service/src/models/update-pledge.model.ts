@@ -1,11 +1,10 @@
-/* tslint:disable:no-any */
-import { model, property } from '@loopback/repository';
+import {model, property} from '@loopback/repository';
 
 /**
  * The model class is generated from OpenAPI schema - UpdatePledge
- * A transaction named UpdatePledge
+ * UpdatePledge
  */
-@model({ name: 'UpdatePledge' })
+@model({name: 'UpdatePledge'})
 export class UpdatePledge {
   constructor(data?: Partial<UpdatePledge>) {
     if (data != null && typeof data === 'object') {
@@ -16,25 +15,41 @@ export class UpdatePledge {
   /**
    *
    */
-  @property({ required: true })
+  @property({required: true, jsonSchema: {
+  type: 'string',
+}})
   pledgeId: string;
 
   /**
    *
    */
-  @property({ required: true })
-  fundingType: 'WEEKLY' | 'MONTHLY' | 'SEMIANNUALY' | 'ANNUALY';
+  @property({required: true, jsonSchema: {
+  type: 'string',
+}})
+  fundingType: string;
 
   /**
    *
    */
-  @property({ required: true })
+  @property({required: true, jsonSchema: {
+  type: 'string',
+}})
   approvedFunding: string;
 
   /**
    *
    */
-  @property({ required: true })
+  @property({required: true, jsonSchema: {
+  type: 'string',
+}})
   fundsPerInstallment: string;
+
 }
+
+export interface UpdatePledgeRelations {
+  // describe navigational properties here
+}
+
+export type UpdatePledgeWithRelations = UpdatePledge & UpdatePledgeRelations;
+
 

@@ -1,11 +1,10 @@
-/* tslint:disable:no-any */
-import { model, property } from '@loopback/repository';
+import {model, property} from '@loopback/repository';
 
 /**
  * The model class is generated from OpenAPI schema - SendPledgeToGlobalCitizen
- * A transaction named SendPledgeToGlobalCitizen
+ * SendPledgeToGlobalCitizen
  */
-@model({ name: 'SendPledgeToGlobalCitizen' })
+@model({name: 'SendPledgeToGlobalCitizen'})
 export class SendPledgeToGlobalCitizen {
   constructor(data?: Partial<SendPledgeToGlobalCitizen>) {
     if (data != null && typeof data === 'object') {
@@ -14,10 +13,19 @@ export class SendPledgeToGlobalCitizen {
   }
 
   /**
-   *@param pledgeId
+   *
    */
-  @property({ required: true })
+  @property({required: true, jsonSchema: {
+  type: 'string',
+}})
   pledgeId: string;
 
 }
+
+export interface SendPledgeToGlobalCitizenRelations {
+  // describe navigational properties here
+}
+
+export type SendPledgeToGlobalCitizenWithRelations = SendPledgeToGlobalCitizen & SendPledgeToGlobalCitizenRelations;
+
 
