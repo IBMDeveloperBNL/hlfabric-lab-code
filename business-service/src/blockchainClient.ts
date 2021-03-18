@@ -33,7 +33,7 @@ export module BlockChainModule {
         await gateway.connect(ccp, {wallet, identity: appAdmin, discovery: gatewayDiscovery});
 
         // Connect to our local fabric
-        const network: Network = await gateway.getNetwork('mychannel');
+        const network: Network = await gateway.getNetwork(CHANNEL);
 
         console.log('**********************************************************************************************************');
         console.log('--> connecting to channel: ' + CHANNEL);
